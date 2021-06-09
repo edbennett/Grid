@@ -263,61 +263,6 @@ public:
   };
 
 
-  static void SU4(void)
-  {
-    const int Nc4=4;
-    typedef Lattice< iMatrix< vComplexF,Nc4> > LatticeSU4;
-
-    Coordinate simd_layout = GridDefaultSimd(Nd,vComplexF::Nsimd());
-    Coordinate mpi_layout  = GridDefaultMpi();
-    
-    std::cout<<GridLogMessage << "=================================================================================="<<std::endl;
-    std::cout<<GridLogMessage << "= Benchmarking z = y*x SU(4) bandwidth"<<std::endl;
-    std::cout<<GridLogMessage << "=================================================================================="<<std::endl;
-    std::cout<<GridLogMessage << "  L  "<<"\t\t"<<"bytes"<<"\t\t\t"<<"GB/s"<<"\t\t"<<"Gflop/s"<<"\t\t seconds"<< "\t\tGB/s / node"<<std::endl;
-    std::cout<<GridLogMessage << "----------------------------------------------------------"<<std::endl;
-  
-    uint64_t NN;
-
-
-    uint64_t lmax=32;
-#define NLOOP (1000*lmax*lmax*lmax*lmax/lat/lat/lat/lat)
-
-    GridSerialRNG          sRNG;      sRNG.SeedFixedIntegers(std::vector<int>({45,12,81,9}));
-    for(int lat=8;lat<=lmax;lat+=8){
-
-      Coordinate latt_size  ({lat*mpi_layout[0],lat*mpi_layout[1],lat*mpi_layout[2],lat*mpi_layout[3]});
-      int64_t vol= latt_size[0]*latt_size[1]*latt_size[2]*latt_size[3];
-
-      GridCartesian     Grid(latt_size,simd_layout,mpi_layout);
-
-      NN =Grid.NodeCount();
-
-
-      LatticeSU4 z(&Grid); z=Zero();
-      LatticeSU4 x(&Grid); x=Zero();
-      LatticeSU4 y(&Grid); y=Zero();
-      double a=2.0;
-
-      uint64_t Nloop=NLOOP;
-
-      double start=usecond();
-      for(int i=0;i<Nloop;i++){
-	z=x*y;
-      }
-      double stop=usecond();
-      double time = (stop-start)/Nloop*1000;
-     
-      double flops=vol*Nc4*Nc4*(6+(Nc4-1)*8);// mul,add
-      double bytes=3.0*vol*Nc4*Nc4*2*sizeof(RealF);
-      std::cout<<GridLogMessage<<std::setprecision(3) 
-	       << lat<<"\t\t"<<bytes<<"   \t\t"<<bytes/time<<"\t\t"<<flops/time<<"\t\t"<<(stop-start)/1000./1000.
-	       << "\t\t"<< bytes/time/NN <<std::endl;
-
-    }
-  };
-
-
   static double DWF(int Ls,int L)
   {
     RealD mass=0.1;
@@ -372,7 +317,7 @@ public:
     GridParallelRNG          RNG5(FGrid);  RNG5.SeedFixedIntegers(seeds5);
     std::cout << GridLogMessage << "Initialised RNGs" << std::endl;
 
-    typedef DomainWallFermionF Action;
+    typedef DomainWallFermion<WilsonAdjImplF> Action;
     typedef typename Action::FermionField Fermion;
     typedef LatticeGaugeFieldF Gauge;
     
@@ -660,7 +605,6 @@ int main (int argc, char ** argv)
 #endif
   Benchmark::Decomposition();
 
-  int do_su4=1;
   int do_memory=1;
   int do_comms =1;
 
@@ -714,13 +658,7 @@ int main (int argc, char ** argv)
     Benchmark::Memory();
   }
 
-  if ( do_su4 ) {
-    std::cout<<GridLogMessage << "=================================================================================="<<std::endl;
-    std::cout<<GridLogMessage << " Memory benchmark " <<std::endl;
-    std::cout<<GridLogMessage << "=================================================================================="<<std::endl;
-    Benchmark::SU4();
-  }
-  
+
   if ( do_comms && (NN>1) ) {
     std::cout<<GridLogMessage << "=================================================================================="<<std::endl;
     std::cout<<GridLogMessage << " Communications benchmark " <<std::endl;
