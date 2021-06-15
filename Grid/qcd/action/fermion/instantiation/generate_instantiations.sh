@@ -67,6 +67,7 @@ CC_LIST=" \
   CayleyFermion5DInstantiation \
   ContinuedFractionFermion5DInstantiation \
   DomainWallEOFAFermionInstantiation  \
+  DomainWallFermionInstantiation \
   MobiusEOFAFermionInstantiation \
   PartialFractionFermion5DInstantiation \
   WilsonFermion5DInstantiation \
