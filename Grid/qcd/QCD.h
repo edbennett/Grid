@@ -99,12 +99,14 @@ template <typename T> using IfNotCoarsened = Invoke<std::enable_if<!isCoarsened<
 template<typename vtype> using iSinglet                   = iScalar<iScalar<iScalar<vtype> > >;
 template<typename vtype> using iSpinMatrix                = iScalar<iMatrix<iScalar<vtype>, Ns> >;
 template<typename vtype> using iColourMatrix              = iScalar<iScalar<iMatrix<vtype, Nc> > > ;
+template<typename vtype> using iAdjColourMatrix              = iScalar<iScalar<iMatrix<vtype, Nc * Nc - 1> > > ;
 template<typename vtype> using iSpinColourMatrix          = iScalar<iMatrix<iMatrix<vtype, Nc>, Ns> >;
 template<typename vtype> using iLorentzColourMatrix       = iVector<iScalar<iMatrix<vtype, Nc> >, Nd > ;
 template<typename vtype> using iDoubleStoredColourMatrix  = iVector<iScalar<iMatrix<vtype, Nc> >, Nds > ;
 template<typename vtype> using iSpinVector                = iScalar<iVector<iScalar<vtype>, Ns> >;
 template<typename vtype> using iColourVector              = iScalar<iScalar<iVector<vtype, Nc> > >;
 template<typename vtype> using iSpinColourVector          = iScalar<iVector<iVector<vtype, Nc>, Ns> >;
+template<typename vtype> using iSpinColourAdjVector       = iScalar<iVector<iVector<vtype, Nc * Nc - 1>, Ns> >;
 template<typename vtype> using iHalfSpinVector            = iScalar<iVector<iScalar<vtype>, Nhs> >;
 template<typename vtype> using iHalfSpinColourVector      = iScalar<iVector<iVector<vtype, Nc>, Nhs> >;
     template<typename vtype> using iSpinColourSpinColourMatrix  = iScalar<iMatrix<iMatrix<iMatrix<iMatrix<vtype, Nc>, Ns>, Nc>, Ns> >;
@@ -130,6 +132,10 @@ typedef iColourMatrix<ComplexD >        ColourMatrixD;
 typedef iColourMatrix<vComplex >        vColourMatrix;
 typedef iColourMatrix<vComplexF>        vColourMatrixF;
 typedef iColourMatrix<vComplexD>        vColourMatrixD;
+
+typedef iAdjColourMatrix<vComplex >        vAdjColourMatrix;
+typedef iAdjColourMatrix<vComplexF>        vAdjColourMatrixF;
+typedef iAdjColourMatrix<vComplexD>        vAdjColourMatrixD;
 
 // SpinColour matrix
 typedef iSpinColourMatrix<Complex  >    SpinColourMatrix;
@@ -199,6 +205,10 @@ typedef iSpinColourVector<Complex >     SpinColourVector;
 typedef iSpinColourVector<ComplexF>     SpinColourVectorF;
 typedef iSpinColourVector<ComplexD>     SpinColourVectorD;
 
+typedef iSpinColourAdjVector<vComplex >     vSpinColourAdjVector;
+typedef iSpinColourAdjVector<vComplexF>     vSpinColourAdjVectorF;
+typedef iSpinColourAdjVector<vComplexD>     vSpinColourAdjVectorD;
+
 typedef iSpinColourVector<vComplex >     vSpinColourVector;
 typedef iSpinColourVector<vComplexF>     vSpinColourVectorF;
 typedef iSpinColourVector<vComplexD>     vSpinColourVectorD;
@@ -247,6 +257,10 @@ typedef Lattice<vColourMatrix>          LatticeColourMatrix;
 typedef Lattice<vColourMatrixF>         LatticeColourMatrixF;
 typedef Lattice<vColourMatrixD>         LatticeColourMatrixD;
 
+typedef Lattice<vAdjColourMatrix>          LatticeAdjColourMatrix;
+typedef Lattice<vAdjColourMatrixF>         LatticeAdjColourMatrixF;
+typedef Lattice<vAdjColourMatrixD>         LatticeAdjColourMatrixD;
+
 typedef Lattice<vSpinMatrix>            LatticeSpinMatrix;
 typedef Lattice<vSpinMatrixF>           LatticeSpinMatrixF;
 typedef Lattice<vSpinMatrixD>           LatticeSpinMatrixD;
@@ -280,6 +294,10 @@ typedef Lattice<vSpinColourVector>      LatticeSpinColourVector;
 typedef Lattice<vSpinColourVectorF>     LatticeSpinColourVectorF;
 typedef Lattice<vSpinColourVectorD>     LatticeSpinColourVectorD;
 
+typedef Lattice<vSpinColourAdjVector>      LatticeSpinColourAdjVector;
+typedef Lattice<vSpinColourAdjVectorF>     LatticeSpinColourAdjVectorF;
+typedef Lattice<vSpinColourAdjVectorD>     LatticeSpinColourAdjVectorD;
+
 typedef Lattice<vHalfSpinVector>        LatticeHalfSpinVector;
 typedef Lattice<vHalfSpinVectorF>       LatticeHalfSpinVectorF;
 typedef Lattice<vHalfSpinVectorD>       LatticeHalfSpinVectorD;
@@ -310,6 +328,10 @@ typedef LatticeSpinColourVector      LatticeFermion;
 typedef LatticeSpinColourVectorF     LatticeFermionF;
 typedef LatticeSpinColourVectorD     LatticeFermionD;
 
+typedef LatticeSpinColourAdjVector      LatticeAdjFermion;
+typedef LatticeSpinColourAdjVectorF     LatticeAdjFermionF;
+typedef LatticeSpinColourAdjVectorD     LatticeAdjFermionD;
+
 typedef LatticeSpinColourMatrix                LatticePropagator;
 typedef LatticeSpinColourMatrixF               LatticePropagatorF;
 typedef LatticeSpinColourMatrixD               LatticePropagatorD;
@@ -330,9 +352,9 @@ typedef Lattice<vColourVector>          LatticeStaggeredFermion;
 typedef Lattice<vColourVectorF>         LatticeStaggeredFermionF;    
 typedef Lattice<vColourVectorD>         LatticeStaggeredFermionD;    
 
-typedef Lattice<vColourMatrix>          LatticeStaggeredPropagator; 
-typedef Lattice<vColourMatrixF>         LatticeStaggeredPropagatorF; 
-typedef Lattice<vColourMatrixD>         LatticeStaggeredPropagatorD; 
+typedef Lattice<vColourMatrix>          LatticeStaggeredPropagator;
+typedef Lattice<vColourMatrixF>         LatticeStaggeredPropagatorF;
+typedef Lattice<vColourMatrixD>         LatticeStaggeredPropagatorD;
 
 //////////////////////////////////////////////////////////////////////////////
 // Peek and Poke named after physics attributes
